@@ -1,0 +1,2 @@
+# lego
+learning go
