@@ -8,10 +8,10 @@ import (
 
 type FormBody map[string]string
 
-func GenerateFormBody(p FormBody) io.Reader {
+func (f *FormBody) GetBody() (io.Reader, error) {
     d := url.Values{}
-    for k, v := range p {
+    for k, v := range *f {
         d.Set(k, v)
     }
-    return strings.NewReader(d.Encode())
+    return strings.NewReader(d.Encode()), nil
 }

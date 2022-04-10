@@ -11,18 +11,17 @@ func main() {
         "param1": "value1",
         "param2": "value2",
     }
-    payload := request.FormBody{
+    payload := &request.FormBody{
         "email": "email@meail.com",
         "password": "password",
     }
-    formBody := request.GenerateFormBody(payload)
-    res, err := request.PostForm("https://httpbin.org/post", params, formBody)
+    res, err := request.PostForm("https://httpbin.org/post", params, payload)
     if err != nil {
         log.Fatal(err)
         return
     }
 
-    log.Println(res)
+    log.Println(res.Body)
 
     res1, err := request.Get("https://httpbin.org/get", params)
     if err != nil {
@@ -30,7 +29,7 @@ func main() {
         return
     }
 
-    log.Println(res1)
+    log.Println(res1.Body)
 
     user := &request.User{"name", 8}
     res2, err := request.PostJson("https://httpbin.org/post", nil, user)
@@ -39,5 +38,5 @@ func main() {
         return
     }
 
-    log.Println(res2)
+    log.Println(res2.Body)
 }

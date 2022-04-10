@@ -6,16 +6,12 @@ import (
     "io"
 )
 
-type IPayload interface {
-    GetJsonPayload() (io.Reader, error)
-}
-
 type User struct {
     Name string `json:"name"`
     Age int `json:"age"`
 }
 
-func (u *User) GetJsonPayload() (io.Reader, error) {
+func (u *User) GetBody() (io.Reader, error) {
     body, err := json.Marshal(u)
     if err != nil {
         return nil, err

@@ -3,14 +3,20 @@ package request
 import (
     "io"
     "net/http"
+
+    "github.com/didadadida93/lego/pkg/response"
 )
 
 type UrlParams map[string]string
 type RequestHeaders map[string]string
 
-var client *http.Client = &http.Client{}
+type IPayload interface {
+    GetBody() (io.Reader, error)
+}
 
-func Get(u string, p UrlParams) (r string, err error) {
+var client *http.Client = &http.Client{CheckRedirect: checkRedirect}
+
+func Get(u string, p UrlParams) (r *response.Response, err error) {
     req, err := http.NewRequest("GET", u, nil)
     if err != nil {
         return
@@ -25,18 +31,17 @@ func Get(u string, p UrlParams) (r string, err error) {
         return
     }
 
-    defer res.Body.Close()
-    body, err := io.ReadAll(res.Body)
+    r, err = response.NewResponse(res)
+    return
+}
+
+func PostForm(u string, p UrlParams, b IPayload) (r *response.Response, err error) {
+    reqBody, err := b.GetBody()
     if err != nil {
         return
     }
 
-    r = string(body)
-    return
-}
-
-func PostForm(u string, p UrlParams, b io.Reader) (r string, err error) {
-    req, err := http.NewRequest("POST", u, b)
+    req, err := http.NewRequest("POST", u, reqBody)
     if err != nil {
         return
     }
@@ -48,29 +53,22 @@ func PostForm(u string, p UrlParams, b io.Reader) (r string, err error) {
     }
     setRequestHeader(req, headers)
 
-
     res, err := client.Do(req)
     if err != nil {
         return
     }
 
-    defer res.Body.Close()
-    body, err := io.ReadAll(res.Body)
-    if err != nil {
-        return
-    }
-
-    r = string(body)
+    r, err = response.NewResponse(res)
     return
 }
 
-func PostJson(u string, p UrlParams, b IPayload) (r string, err error) {
-    payload, err := b.GetJsonPayload()
+func PostJson(u string, p UrlParams, b IPayload) (r *response.Response, err error) {
+    reqBody, err := b.GetBody()
     if err != nil {
         return
     }
 
-    req, err := http.NewRequest("POST", u, payload)
+    req, err := http.NewRequest("POST", u, reqBody)
     if err != nil {
         return
     }
@@ -88,13 +86,7 @@ func PostJson(u string, p UrlParams, b IPayload) (r string, err error) {
         return
     }
 
-    defer res.Body.Close()
-    body, err := io.ReadAll(res.Body)
-    if err != nil {
-        return
-    }
-
-    r = string(body)
+    r, err = response.NewResponse(res)
     return
 }
 
@@ -112,7 +104,7 @@ func addUrlParams(req *http.Request, params UrlParams) {
 
 func setRequestHeader(req *http.Request, headers RequestHeaders) {
     // set header user-agent manually
-    req.Header.Set("User-Agent", "lego 1.0.0")
+    req.Header.Set("User-Agent", userAgent)
 
     if headers == nil {
         return
@@ -121,4 +113,8 @@ func setRequestHeader(req *http.Request, headers RequestHeaders) {
     for k, v := range headers {
         req.Header.Set(k, v)
     }
+}
+
+func checkRedirect(req *http.Request, via []*http.Request) error {
+    return http.ErrUseLastResponse
 }
