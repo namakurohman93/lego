@@ -21,8 +21,8 @@ func (u *User) GetBody() (io.Reader, error) {
 	return bytes.NewBuffer(body), nil
 }
 
-func (u *User) GetHeaders() RequestHeaders {
-	return RequestHeaders{
+func (u *User) GetHeaders() RequestHeader {
+	return RequestHeader{
 		"Content-Type": jsonContentType,
 	}
 }
@@ -46,6 +46,6 @@ func (p *TKPayload) GetBody() (io.Reader, error) {
 	return bytes.NewBuffer(body), nil
 }
 
-func (p *TKPayload) GetHeaders() RequestHeaders {
-	return RequestHeaders{"Content-Type": jsonContentType}
+func (p *TKPayload) GetHeaders() RequestHeader {
+	return RequestHeader{"Content-Type": jsonContentType}
 }

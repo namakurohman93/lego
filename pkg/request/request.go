@@ -7,11 +7,11 @@ import (
 	"github.com/didadadida93/lego/pkg/response"
 )
 
-type RequestHeaders map[string]string
+type RequestHeader map[string]string
 
 type IPayload interface {
 	GetBody() (io.Reader, error)
-	GetHeaders() RequestHeaders
+	GetHeaders() RequestHeader
 }
 
 var client *http.Client = &http.Client{CheckRedirect: checkRedirect}

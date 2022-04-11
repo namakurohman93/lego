@@ -47,7 +47,7 @@ func (rc *RequestConfig) GetUrl() (string, error) {
 	return u.String(), nil
 }
 
-func (rc *RequestConfig) GetHeaders() RequestHeaders {
+func (rc *RequestConfig) GetHeaders() RequestHeader {
 	if rc.method == "GET" {
 		return nil
 	}
@@ -125,7 +125,7 @@ func NewRequestConfig() *RequestConfig {
 	return &RequestConfig{}
 }
 
-func setRequestHeader(req *http.Request, headers RequestHeaders) {
+func setRequestHeader(req *http.Request, headers RequestHeader) {
 	// set header user-agent manually
 	req.Header.Set("User-Agent", userAgent)
 
