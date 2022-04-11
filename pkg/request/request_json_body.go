@@ -11,12 +11,20 @@ type User struct {
 	Age  int    `json:"age"`
 }
 
+var jsonContentType string = "application/json"
+
 func (u *User) GetBody() (io.Reader, error) {
 	body, err := json.Marshal(u)
 	if err != nil {
 		return nil, err
 	}
 	return bytes.NewBuffer(body), nil
+}
+
+func (u *User) GetHeaders() RequestHeaders {
+	return RequestHeaders{
+		"Content-Type": jsonContentType,
+	}
 }
 
 type TKPayload struct {
@@ -36,4 +44,10 @@ func (p *TKPayload) GetBody() (io.Reader, error) {
 		return nil, err
 	}
 	return bytes.NewBuffer(body), nil
+}
+
+func (p *TKPayload) GetHeaders() RequestHeaders {
+	return RequestHeaders{
+		"Content-Type": jsonContentType,
+	}
 }
