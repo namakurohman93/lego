@@ -46,7 +46,7 @@ func getMsid(rc *request.RequestConfig, msid *string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	*msid = execRegexp(`msid=([\w]*)&msname`, res.Body)
+	execRegexp(`msid=([\w]*)&msname`, res.Body, msid)
 	return
 }
 
@@ -67,7 +67,7 @@ func getToken(rc *request.RequestConfig, e, p string, m, t *string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	*t = execRegexp(`token=([\w]*)&msid`, res.Body)
+	execRegexp(`token=([\w]*)&msid`, res.Body, t)
 	return
 }
 
@@ -117,7 +117,8 @@ func getLobbySession(cookies []string) string {
 	return v
 }
 
-func execRegexp(r, s string) string {
+func execRegexp(r, s string, t *string) {
 	re := regexp.MustCompile(r)
-	return re.FindStringSubmatch(s)[1]
+	*t = re.FindStringSubmatch(s)[1]
+  return
 }
