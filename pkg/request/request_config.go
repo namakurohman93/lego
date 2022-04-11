@@ -9,32 +9,37 @@ import (
 type UrlParams map[string]string
 
 type RequestConfig struct {
-	Url            string
-	Params         UrlParams
-	Body           IPayload
+	url            string
+	params         UrlParams
+	body           IPayload
 	FollowRedirect bool
-	Method         string
+	method         string
 }
 
 func (rc *RequestConfig) GetBody() (io.Reader, error) {
-	if rc.Method == "GET" {
+	if rc.method == "GET" {
 		return nil, nil
 	}
-	return rc.Body.GetBody()
+
+  if rc.body == nil {
+      return nil, nil
+  }
+
+	return rc.body.GetBody()
 }
 
 func (rc *RequestConfig) GetUrl() (string, error) {
-	if rc.Params == nil {
-		return rc.Url, nil
+	if rc.params == nil {
+		return rc.url, nil
 	}
 
-	u, err := url.Parse(rc.Url)
+	u, err := url.Parse(rc.url)
 	if err != nil {
 		return "", err
 	}
 
 	q := u.Query()
-	for k, v := range rc.Params {
+	for k, v := range rc.params {
 		q.Add(k, v)
 	}
 	u.RawQuery = q.Encode()
@@ -43,10 +48,15 @@ func (rc *RequestConfig) GetUrl() (string, error) {
 }
 
 func (rc *RequestConfig) GetHeaders() RequestHeaders {
-	if rc.Method == "GET" {
+	if rc.method == "GET" {
 		return nil
 	}
-	return rc.Body.GetHeaders()
+
+  if rc.body == nil {
+      return nil
+  }
+
+	return rc.body.GetHeaders()
 }
 
 func (rc *RequestConfig) PrepareRequest() (*http.Request, error) {
@@ -62,7 +72,7 @@ func (rc *RequestConfig) PrepareRequest() (*http.Request, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest(rc.Method, url, reqBody)
+	req, err := http.NewRequest(rc.method, url, reqBody)
 	if err != nil {
 		return nil, err
 	}
@@ -70,6 +80,49 @@ func (rc *RequestConfig) PrepareRequest() (*http.Request, error) {
 	setRequestHeader(req, rc.GetHeaders())
 
 	return req, nil
+}
+
+func (rc *RequestConfig) Set(key string, value any) (ok bool) {
+	ok = true
+	switch key {
+	case "url":
+		if value == nil {
+			rc.url = ""
+		} else {
+			rc.url = value.(string)
+		}
+	case "params":
+		if value == nil {
+			rc.params = nil
+		} else {
+			rc.params = value.(UrlParams)
+		}
+	case "body":
+		if value == nil {
+			rc.body = nil
+		} else {
+			rc.body = value.(IPayload)
+		}
+	case "followRedirect":
+		if value == nil {
+			rc.FollowRedirect = false
+		} else {
+			rc.FollowRedirect = value.(bool)
+		}
+	case "method":
+		if value == nil {
+			rc.method = "GET"
+		} else {
+			rc.method = value.(string)
+		}
+	default:
+		ok = false
+	}
+	return
+}
+
+func NewRequestConfig() *RequestConfig {
+	return &RequestConfig{}
 }
 
 func setRequestHeader(req *http.Request, headers RequestHeaders) {

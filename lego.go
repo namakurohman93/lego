@@ -9,23 +9,24 @@ import (
 )
 
 func main() {
-	// new request with RequestConfig
 	params := request.UrlParams{
 		"params1": "values1",
 		"params2": "values2",
 	}
+
 	payload1 := &request.FormBody{
 		"email":    "email@email.com",
 		"password": "password",
 	}
-	requestConfig := &request.RequestConfig{
-		Url:            "https://httpbin.org/post",
-		Params:         params,
-		Body:           payload1,
-		FollowRedirect: false,
-		Method:         http.MethodPost,
-	}
-	res, err := request.Do(requestConfig)
+
+	rc := request.NewRequestConfig()
+	rc.Set("url", "https://httpbin.org/post")
+	rc.Set("params", params)
+	rc.Set("body", payload1)
+	rc.Set("followRedirect", false)
+	rc.Set("method", http.MethodPost)
+
+	res, err := request.Do(rc)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -35,40 +36,25 @@ func main() {
 		Name: "name",
 		Age:  8,
 	}
-	requestConfig1 := &request.RequestConfig{
-		Url:            "https://httpbin.org/post",
-		Params:         params,
-		Body:           payload2,
-		FollowRedirect: false,
-		Method:         http.MethodPost,
-	}
-	res, err = request.Do(requestConfig1)
+	rc.Set("body", payload2)
+	res, err = request.Do(rc)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println(res.Body)
 
-	requestConfig2 := &request.RequestConfig{
-		Url:            "https://httpbin.org/get",
-		Params:         nil,
-		Body:           nil,
-		FollowRedirect: false,
-		Method:         http.MethodGet,
-	}
-	res, err = request.Do(requestConfig2)
+	rc.Set("url", "https://httpbin.org/get")
+	rc.Set("params", nil)
+	rc.Set("body", nil)
+	rc.Set("method", http.MethodGet)
+	res, err = request.Do(rc)
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println(res.Body)
 
-	requestConfig3 := &request.RequestConfig{
-		Url:            "https://httpbin.org/get",
-		Params:         params,
-		Body:           nil,
-		FollowRedirect: false,
-		Method:         http.MethodGet,
-	}
-	res, err = request.Do(requestConfig3)
+	rc.Set("params", params)
+	res, err = request.Do(rc)
 	if err != nil {
 		log.Fatal(err)
 	}

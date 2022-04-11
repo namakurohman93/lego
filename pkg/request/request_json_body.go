@@ -47,7 +47,5 @@ func (p *TKPayload) GetBody() (io.Reader, error) {
 }
 
 func (p *TKPayload) GetHeaders() RequestHeaders {
-	return RequestHeaders{
-		"Content-Type": jsonContentType,
-	}
+	return RequestHeaders{"Content-Type": jsonContentType}
 }

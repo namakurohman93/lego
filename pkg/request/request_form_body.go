@@ -19,7 +19,5 @@ func (f *FormBody) GetBody() (io.Reader, error) {
 }
 
 func (f *FormBody) GetHeaders() RequestHeaders {
-	return RequestHeaders{
-		"Content-Type": formContentType,
-	}
+	return RequestHeaders{"Content-Type": formContentType}
 }
