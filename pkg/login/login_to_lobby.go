@@ -120,5 +120,5 @@ func getLobbySession(cookies []string) string {
 func execRegexp(r, s string, t *string) {
 	re := regexp.MustCompile(r)
 	*t = re.FindStringSubmatch(s)[1]
-  return
+	return
 }
