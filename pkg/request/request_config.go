@@ -21,9 +21,9 @@ func (rc *RequestConfig) GetBody() (io.Reader, error) {
 		return nil, nil
 	}
 
-  if rc.body == nil {
-      return nil, nil
-  }
+	if rc.body == nil {
+		return nil, nil
+	}
 
 	return rc.body.GetBody()
 }
@@ -52,9 +52,9 @@ func (rc *RequestConfig) GetHeaders() RequestHeaders {
 		return nil
 	}
 
-  if rc.body == nil {
-      return nil
-  }
+	if rc.body == nil {
+		return nil
+	}
 
 	return rc.body.GetHeaders()
 }
