@@ -12,12 +12,12 @@ import (
 
 type LobbyCookies map[string]string
 
-func loginToLobby(e, p string) (c LobbyCookies, s string) {
-	var msid, token, redirectUrl string
+func loginToLobby(e, p string) (c LobbyCookies, s, m string) {
+	var token, redirectUrl string
 	rc := request.NewRequestConfig()
-	getMsid(rc, &msid)
-	getToken(rc, e, p, &msid, &token)
-	getRedirectUrl(rc, &msid, &token, &redirectUrl)
+	getMsid(rc, &m)
+	getToken(rc, e, p, &m, &token)
+	getRedirectUrl(rc, &m, &token, &redirectUrl)
 
 	rc.Set("url", redirectUrl)
 	rc.Set("params", nil)
