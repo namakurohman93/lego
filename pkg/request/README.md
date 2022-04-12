@@ -6,7 +6,7 @@ common arguments that might be needed:
 * form [v]
 * json (i guess it is body but in json format) [v]
 * headers -> User-Agent [v]
-          -> Cookie [v]
-* follow redirect [x]
+          -> Cookie [x]
+* follow redirect [v]
 
 need to have control to populate those arguments to request
