@@ -18,6 +18,6 @@ func (f *FormBody) GetBody() (io.Reader, error) {
 	return strings.NewReader(d.Encode()), nil
 }
 
-func (f *FormBody) GetHeader() RequestHeaders {
-	return RequestHeaders{"Content-Type": formContentType}
+func (f *FormBody) GetHeader() RequestHeader {
+	return RequestHeader{"Content-Type": formContentType}
 }
