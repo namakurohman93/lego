@@ -50,21 +50,14 @@ func (rc *RequestConfig) GetUrl() (string, error) {
 }
 
 func (rc *RequestConfig) GetHeader() RequestHeader {
-	if rc.method == "GET" {
-		return nil
+	h := make(RequestHeader)
+	if rc.body != nil {
+		t := rc.body.GetHeader()
+		mergeHeader(&h, &t)
 	}
-
-	if rc.body == nil {
-		return nil
-	}
-
-	h := rc.body.GetHeader()
-
 	if rc.header != nil {
-		// merge header
 		mergeHeader(&h, &rc.header)
 	}
-
 	return h
 }
 

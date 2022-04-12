@@ -15,6 +15,10 @@ func main() {
 	// "params2": "values2",
 	// }
 
+	// header := request.RequestHeader{
+	// "Cookie": "temp cookie from lego",
+	// }
+
 	// payload1 := &request.FormBody{
 	// "email":    "email@email.com",
 	// "password": "password",
@@ -24,6 +28,7 @@ func main() {
 	// rc.Set("url", "https://httpbin.org/post")
 	// rc.Set("params", params)
 	// rc.Set("body", payload1)
+	// rc.Set("header", header)
 	// rc.Set("followRedirect", false)
 	// rc.Set("method", http.MethodPost)
 
@@ -55,6 +60,7 @@ func main() {
 	// log.Println(res.Body)
 
 	// rc.Set("params", params)
+	// rc.Set("header", nil)
 	// res, err = request.Do(rc)
 	// if err != nil {
 	// log.Fatal(err)
