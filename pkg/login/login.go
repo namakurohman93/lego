@@ -17,15 +17,10 @@ func (c Cookie) String() (s string) {
 	return
 }
 
-func Login() {
-	e, p, gw := "email@email.com", "password", "comx"
+func Login(e, p, gw string) (string, string, string, Cookie, Cookie) {
 	c, s, m := loginToLobby(e, p)
 	gc, gs := loginToGameworld(c, s, m, gw)
-	log.Println(c)
-	log.Println(s)
-	log.Println(m)
-	log.Println(gc)
-	log.Println(gs)
+	return m, s, gs, c, gc
 }
 
 func execRegexp(r, s string, t *string) {

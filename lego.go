@@ -1,15 +1,42 @@
 package main
 
 import (
-	// "log"
-	// "net/http"
+	"fmt"
+	"log"
+	"net/http"
+	"time"
 
 	"github.com/didadadida93/lego/pkg/login"
-	// "github.com/didadadida93/lego/pkg/request"
+	"github.com/didadadida93/lego/pkg/request"
 )
 
 func main() {
-	login.Login()
+	e, p, gw := "email@email.com", "password", "comx"
+	// m, s, gs, c, gc := login.Login(e, p, gw)
+	_, _, gs, _, _ := login.Login(e, p, gw)
+	controller, action, t := "cache", "get", time.Now().Unix()
+	url := fmt.Sprintf("https://%s.kingdoms.com/api/?c=%s&a=%s&t%v",
+		gw, controller, action, t)
+	rc := request.NewRequestConfig()
+	rc.Set("url", url)
+	rc.Set("params", nil)
+	rc.Set("body", &request.TKPayload{
+		Action:     action,
+		Controller: controller,
+		Session:    gs,
+		Params: request.TKParams{
+			Names: []string{"Collection:Village:own"},
+		},
+	})
+	rc.Set("header", nil)
+	rc.Set("method", http.MethodPost)
+	rc.Set("followRedirect", false)
+
+	res, err := request.Do(rc)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(res.Body)
 	// params := request.UrlParams{
 	// "params1": "values1",
 	// "params2": "values2",
