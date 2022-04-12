@@ -11,7 +11,7 @@ type RequestHeader map[string]string
 
 type IPayload interface {
 	GetBody() (io.Reader, error)
-	GetHeaders() RequestHeader
+	GetHeader() RequestHeader
 }
 
 var client *http.Client = &http.Client{CheckRedirect: checkRedirect}

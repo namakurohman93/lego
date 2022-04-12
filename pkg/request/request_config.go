@@ -47,7 +47,7 @@ func (rc *RequestConfig) GetUrl() (string, error) {
 	return u.String(), nil
 }
 
-func (rc *RequestConfig) GetHeaders() RequestHeader {
+func (rc *RequestConfig) GetHeader() RequestHeader {
 	if rc.method == "GET" {
 		return nil
 	}
@@ -56,7 +56,7 @@ func (rc *RequestConfig) GetHeaders() RequestHeader {
 		return nil
 	}
 
-	return rc.body.GetHeaders()
+	return rc.body.GetHeader()
 }
 
 func (rc *RequestConfig) PrepareRequest() (*http.Request, error) {
@@ -77,7 +77,7 @@ func (rc *RequestConfig) PrepareRequest() (*http.Request, error) {
 		return nil, err
 	}
 
-	setRequestHeader(req, rc.GetHeaders())
+	setRequestHeader(req, rc.GetHeader())
 
 	return req, nil
 }
