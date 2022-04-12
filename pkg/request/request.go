@@ -7,8 +7,6 @@ import (
 	"github.com/didadadida93/lego/pkg/response"
 )
 
-type RequestHeader map[string]string
-
 type IPayload interface {
 	GetBody() (io.Reader, error)
 	GetHeader() RequestHeader
