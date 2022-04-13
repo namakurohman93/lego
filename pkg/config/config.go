@@ -3,7 +3,6 @@ package config
 import (
 	"encoding/json"
 	"os"
-	"time"
 
 	"github.com/didadadida93/lego/pkg/login"
 )
@@ -15,28 +14,14 @@ type Config struct {
 	GameSession login.GameSession `json:"gameSession"`
 }
 
-func (conf Config) Authenticate() (login.GameSession, error) {
-	z := time.Time{}
-	if conf.GameSession.Msid != "" &&
-		conf.GameSession.LobbySession != "" &&
-		conf.GameSession.LobbyCookie != nil &&
-		conf.GameSession.GameworldSession != "" &&
-		conf.GameSession.GameworldCookie != nil &&
-		conf.GameSession.Expires != z {
-
-		return login.GameSession{
-			Msid:             conf.GameSession.Msid,
-			LobbySession:     conf.GameSession.LobbySession,
-			LobbyCookie:      conf.GameSession.LobbyCookie,
-			GameworldSession: conf.GameSession.GameworldSession,
-			GameworldCookie:  conf.GameSession.GameworldCookie,
-			Expires:          conf.GameSession.Expires,
-		}, nil
+func (c *Config) UpdateGameSessionConfig(g *login.GameSession) error {
+	c.GameSession = *g
+	b, err := json.MarshalIndent(c, "", "  ")
+	if err != nil {
+		return err
 	}
-
-	gameSession := login.Login(conf.Email, conf.Password, conf.Gameworld)
-	err := saveGameSession(&conf, &gameSession)
-	return gameSession, err
+	err = os.WriteFile("config.json", b, 0644) // -rw-r--r--
+	return err
 }
 
 func GetConfig() (c Config, err error) {
@@ -49,14 +34,4 @@ func GetConfig() (c Config, err error) {
 		return
 	}
 	return
-}
-
-func saveGameSession(conf *Config, gs *login.GameSession) error {
-	conf.GameSession = *gs
-	b, err := json.MarshalIndent(conf, "", "  ")
-	if err != nil {
-		return err
-	}
-	err = os.WriteFile("config.json", b, 0644) // -rw-r--r--
-	return err
 }

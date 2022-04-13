@@ -32,7 +32,7 @@ type cacheData struct {
 
 type avatarCache struct {
 	Data avatarStruct `json:"data"`
-	Name string `json:"name"`
+	Name string       `json:"name"`
 }
 
 type avatarStruct struct {

@@ -8,6 +8,7 @@ import (
 	// "strings"
 
 	"github.com/didadadida93/lego/pkg/config"
+	"github.com/didadadida93/lego/pkg/tkapi"
 	// "github.com/didadadida93/lego/pkg/request"
 )
 
@@ -29,7 +30,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	gs, err := c.Authenticate()
+	gs, err := tkapi.Authenticate(&c)
 	if err != nil {
 		log.Fatal(err)
 	}
