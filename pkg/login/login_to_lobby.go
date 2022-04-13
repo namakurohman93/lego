@@ -1,19 +1,27 @@
 package login
 
 import (
-	"log"
 	"net/http"
 	"time"
 
 	"github.com/didadadida93/lego/pkg/request"
 )
 
-func loginToLobby(e, p string) (c request.Cookie, s, m string, t time.Time) {
+func loginToLobby(e, p string) (c request.Cookie, s, m string, t time.Time, err error) {
 	var token, redirectUrl string
 	rc := request.NewRequestConfig()
-	getMsid(rc, &m)
-	getToken(rc, e, p, &m, &token)
-	getRedirectUrl(rc, &m, &token, &redirectUrl)
+	err = getMsid(rc, &m)
+	if err != nil {
+		return
+	}
+	err = getToken(rc, e, p, &m, &token)
+	if err != nil {
+		return
+	}
+	err = getRedirectUrl(rc, &m, &token, &redirectUrl)
+	if err != nil {
+		return
+	}
 
 	rc.Set("url", redirectUrl)
 	rc.Set("params", nil)
@@ -24,7 +32,7 @@ func loginToLobby(e, p string) (c request.Cookie, s, m string, t time.Time) {
 
 	res, err := request.Do(rc)
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
 
 	// get cookies & session
@@ -34,7 +42,7 @@ func loginToLobby(e, p string) (c request.Cookie, s, m string, t time.Time) {
 	return
 }
 
-func getMsid(rc *request.RequestConfig, msid *string) {
+func getMsid(rc *request.RequestConfig, msid *string) error {
 	rc.Set("url", "https://mellon-t5.traviangames.com/authentication/login/ajax/form-validate")
 	rc.Set("params", nil)
 	rc.Set("body", nil)
@@ -44,13 +52,13 @@ func getMsid(rc *request.RequestConfig, msid *string) {
 
 	res, err := request.Do(rc)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	execRegexp(`msid=([\w]*)&msname`, res.Body, msid)
-	return
+	return nil
 }
 
-func getToken(rc *request.RequestConfig, e, p string, m, t *string) {
+func getToken(rc *request.RequestConfig, e, p string, m, t *string) error {
 	rc.Set("url", "https://mellon-t5.traviangames.com/authentication/login/ajax/form-validate")
 	rc.Set("params", request.UrlParams{
 		"msid":   *m,
@@ -66,13 +74,13 @@ func getToken(rc *request.RequestConfig, e, p string, m, t *string) {
 
 	res, err := request.Do(rc)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	execRegexp(`token=([\w]*)&msid`, res.Body, t)
-	return
+	return nil
 }
 
-func getRedirectUrl(rc *request.RequestConfig, m, t, r *string) {
+func getRedirectUrl(rc *request.RequestConfig, m, t, r *string) error {
 	rc.Set("url", "http://lobby.kingdoms.com/api/login.php")
 	rc.Set("params", request.UrlParams{
 		"msid":   *m,
@@ -86,9 +94,9 @@ func getRedirectUrl(rc *request.RequestConfig, m, t, r *string) {
 
 	res, err := request.Do(rc)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	*r = res.Header.Get("location")
-	return
+	return nil
 }

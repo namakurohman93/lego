@@ -24,7 +24,10 @@ func Authenticate(c *config.Config) (login.GameSession, error) {
 			Expires:          c.GameSession.Expires,
 		}, nil
 	}
-	g := login.Login(c.Email, c.Password, c.Gameworld)
-	err := c.UpdateGameSessionConfig(&g)
+	g, err := login.Login(c.Email, c.Password, c.Gameworld)
+	if err != nil {
+		return g, err
+	}
+	err = c.UpdateGameSessionConfig(&g)
 	return g, err
 }

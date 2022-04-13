@@ -3,7 +3,6 @@ package login
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 
@@ -53,11 +52,17 @@ type avatarStruct struct {
 
 // --- ended here
 
-func loginToGameworld(c request.Cookie, s, m, gw string) (gc request.Cookie, gs string) {
+func loginToGameworld(c request.Cookie, s, m, gw string) (gc request.Cookie, gs string, err error) {
 	var token, gwId string
 	rc := request.NewRequestConfig()
-	getGameworldId(rc, s, gw, &gwId)
+	err = getGameworldId(rc, s, gw, &gwId)
+	if err != nil {
+		return
+	}
 	getGameworldToken(rc, m, gwId, &token)
+	if err != nil {
+		return
+	}
 
 	url := fmt.Sprintf("https://%s.kingdoms.com/api/login.php", gw)
 	rc.Set("url", url)
@@ -73,7 +78,7 @@ func loginToGameworld(c request.Cookie, s, m, gw string) (gc request.Cookie, gs 
 
 	res, err := request.Do(rc)
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
 
 	// get cookie & session
@@ -82,7 +87,7 @@ func loginToGameworld(c request.Cookie, s, m, gw string) (gc request.Cookie, gs 
 	return
 }
 
-func getGameworldId(rc *request.RequestConfig, s, gw string, gwId *string) {
+func getGameworldId(rc *request.RequestConfig, s, gw string, gwId *string) error {
 	rc.Set("url", "https://lobby.kingdoms.com/api/index.php")
 	rc.Set("params", nil)
 	rc.Set("body", &request.TKPayload{
@@ -99,12 +104,12 @@ func getGameworldId(rc *request.RequestConfig, s, gw string, gwId *string) {
 
 	res, err := request.Do(rc)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	var resp tkApiResponse
 	err = json.Unmarshal([]byte(res.Body), &resp)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	for _, avatar := range resp.Cache[0].Data.Cache {
 		if strings.ToLower(avatar.Data.WorldName) == strings.ToLower(gw) {
@@ -112,10 +117,10 @@ func getGameworldId(rc *request.RequestConfig, s, gw string, gwId *string) {
 			break
 		}
 	}
-	return
+	return nil
 }
 
-func getGameworldToken(rc *request.RequestConfig, m, gwId string, t *string) {
+func getGameworldToken(rc *request.RequestConfig, m, gwId string, t *string) error {
 	url := fmt.Sprintf(
 		"https://mellon-t5.traviangames.com/game-world/join/gameWorldId/%s",
 		gwId)
@@ -131,8 +136,8 @@ func getGameworldToken(rc *request.RequestConfig, m, gwId string, t *string) {
 
 	res, err := request.Do(rc)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	execRegexp(`token=([\w]*)&msid`, res.Body, t)
-	return
+	return nil
 }
