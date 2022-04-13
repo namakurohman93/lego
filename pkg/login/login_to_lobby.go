@@ -8,7 +8,7 @@ import (
 	"github.com/didadadida93/lego/pkg/request"
 )
 
-func loginToLobby(e, p string) (c Cookie, s, m string, t time.Time) {
+func loginToLobby(e, p string) (c request.Cookie, s, m string, t time.Time) {
 	var token, redirectUrl string
 	rc := request.NewRequestConfig()
 	getMsid(rc, &m)

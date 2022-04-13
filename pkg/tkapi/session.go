@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/didadadida93/lego/pkg/login"
+	"github.com/didadadida93/lego/pkg/request"
 )
 
 type GameSession struct {
 	Msid             string
 	LobbySession     string
-	LobbyCookie      login.Cookie
+	LobbyCookie      request.Cookie
 	GameworldSession string
-	GameworldCookie  login.Cookie
+	GameworldCookie  request.Cookie
 	Expires          time.Time
 }
 

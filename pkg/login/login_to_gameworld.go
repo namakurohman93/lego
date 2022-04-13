@@ -53,7 +53,7 @@ type Avatar struct {
 
 // --- ended here
 
-func loginToGameworld(c Cookie, s, m, gw string) (gc Cookie, gs string) {
+func loginToGameworld(c request.Cookie, s, m, gw string) (gc request.Cookie, gs string) {
 	var token, gwId string
 	rc := request.NewRequestConfig()
 	getGameworldId(rc, s, gw, &gwId)

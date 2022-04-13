@@ -6,9 +6,6 @@ import (
 	"net/url"
 )
 
-type UrlParams map[string]string
-type Header map[string]string
-
 type RequestConfig struct {
 	url            string
 	params         UrlParams

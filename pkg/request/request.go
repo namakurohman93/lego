@@ -1,6 +1,7 @@
 package request
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 
@@ -10,6 +11,17 @@ import (
 type IPayload interface {
 	GetBody() (io.Reader, error)
 	GetHeader() Header
+}
+
+type UrlParams map[string]string
+type Header map[string]string
+type Cookie map[string]string
+
+func (c Cookie) String() (s string) {
+	for k, v := range c {
+		s += fmt.Sprintf("%s=%v; ", k, v)
+	}
+	return
 }
 
 var client *http.Client = &http.Client{CheckRedirect: checkRedirect}

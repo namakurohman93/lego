@@ -1,24 +1,16 @@
 package login
 
 import (
-	"fmt"
 	"log"
 	"net/url"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/didadadida93/lego/pkg/request"
 )
 
-type Cookie map[string]string
-
-func (c Cookie) String() (s string) {
-	for k, v := range c {
-		s += fmt.Sprintf("%s=%v; ", k, v)
-	}
-	return
-}
-
-func Login(e, p, gw string) (string, string, string, Cookie, Cookie, time.Time) {
+func Login(e, p, gw string) (string, string, string, request.Cookie, request.Cookie, time.Time) {
 	c, s, m, t := loginToLobby(e, p)
 	gc, gs := loginToGameworld(c, s, m, gw)
 	return m, s, gs, c, gc, t
@@ -30,8 +22,8 @@ func execRegexp(r, s string, t *string) {
 	return
 }
 
-func getCookie(cookies []string) Cookie {
-	result := make(Cookie)
+func getCookie(cookies []string) request.Cookie {
+	result := make(request.Cookie)
 
 	for _, cookie := range cookies {
 		c := strings.Split(cookie, ";")[0]
