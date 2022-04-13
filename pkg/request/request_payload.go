@@ -1,11 +1,11 @@
 package request
 
 import (
-    "bytes"
-    "encoding/json"
-    "io"
-    "net/url"
-    "strings"
+	"bytes"
+	"encoding/json"
+	"io"
+	"net/url"
+	"strings"
 )
 
 var formContentType string = "application/x-www-form-urlencoded"
