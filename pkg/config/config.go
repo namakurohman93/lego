@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"os"
+	"time"
 
 	"github.com/didadadida93/lego/pkg/login"
 	"github.com/didadadida93/lego/pkg/tkapi"
@@ -16,26 +17,30 @@ type Config struct {
 }
 
 func (conf Config) Authenticate() (tkapi.GameSession, error) {
+	z := time.Time{}
 	if conf.GameSession.Msid != "" &&
 		conf.GameSession.LobbySession != "" &&
 		conf.GameSession.LobbyCookie != nil &&
 		conf.GameSession.GameworldSession != "" &&
-		conf.GameSession.GameworldCookie != nil {
+		conf.GameSession.GameworldCookie != nil &&
+		conf.GameSession.Expires != z {
 		return tkapi.GameSession{
 			Msid:             conf.GameSession.Msid,
 			LobbySession:     conf.GameSession.LobbySession,
 			LobbyCookie:      conf.GameSession.LobbyCookie,
 			GameworldSession: conf.GameSession.GameworldSession,
 			GameworldCookie:  conf.GameSession.GameworldCookie,
+			Expires:          conf.GameSession.Expires,
 		}, nil
 	}
-	m, s, gs, c, gc := login.Login(conf.Email, conf.Password, conf.Gameworld)
+	m, s, gs, c, gc, t := login.Login(conf.Email, conf.Password, conf.Gameworld)
 	gameSession := tkapi.GameSession{
 		Msid:             m,
 		LobbySession:     s,
 		LobbyCookie:      c,
 		GameworldSession: gs,
 		GameworldCookie:  gc,
+		Expires:          t,
 	}
 	err := saveGameSession(&conf, &gameSession)
 	return gameSession, err

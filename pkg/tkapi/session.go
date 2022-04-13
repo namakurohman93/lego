@@ -2,6 +2,7 @@ package tkapi
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/didadadida93/lego/pkg/login"
 )
@@ -12,6 +13,7 @@ type GameSession struct {
 	LobbyCookie      login.Cookie
 	GameworldSession string
 	GameworldCookie  login.Cookie
+	Expires          time.Time
 }
 
 func (gs GameSession) GetGameCookie() string {

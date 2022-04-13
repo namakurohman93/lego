@@ -3,11 +3,12 @@ package login
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/didadadida93/lego/pkg/request"
 )
 
-func loginToLobby(e, p string) (c Cookie, s, m string) {
+func loginToLobby(e, p string) (c Cookie, s, m string, t time.Time) {
 	var token, redirectUrl string
 	rc := request.NewRequestConfig()
 	getMsid(rc, &m)
@@ -28,6 +29,7 @@ func loginToLobby(e, p string) (c Cookie, s, m string) {
 	// get cookies & session
 	c = getCookie(res.Header.Values("set-cookie"))
 	s = getSession("gl5SessionKey", res.Header.Values("set-cookie"))
+	t = getCookieExp(res.Header.Values("set-cookie"))
 	return
 }
 

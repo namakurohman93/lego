@@ -5,23 +5,35 @@ import (
 	"log"
 	// "net/http"
 	// "time"
+	// "strings"
 
 	"github.com/didadadida93/lego/pkg/config"
 	// "github.com/didadadida93/lego/pkg/request"
 )
 
 func main() {
+	// t1, err := time.Parse(time.RFC1123, "Sun, 24 Apr 2022 08:04:39 GMT")
+	// t1, err := time.Parse(time.RFC1123, strings.ReplaceAll("Sun, 24-Apr-2022 08:04:39 GMT", "-", " "))
+	// if err != nil {
+	// log.Fatal(err)
+	// }
+	// st := t1.Format(time.RFC3339)
+	// t2, err := time.Parse(time.RFC3339, st)
+	// if err != nil {
+	// log.Fatal(err)
+	// }
+	// yesterday := t2.AddDate(0, 0, -1)
+	// n := time.Now()
+	// log.Println(yesterday.Before(n))
 	c, err := config.GetConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(c)
 	gs, err := c.Authenticate()
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Println(gs)
-	log.Println(c)
 	// controller, action := "cache", "get"
 	// url := fmt.Sprintf("https://%s.kingdoms.com/api/?c=%s&a=%s&t%v",
 	// c.Gameworld, controller, action, time.Now().Unix())

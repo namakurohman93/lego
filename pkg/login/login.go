@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
+	"time"
 )
 
 type Cookie map[string]string
@@ -17,10 +18,10 @@ func (c Cookie) String() (s string) {
 	return
 }
 
-func Login(e, p, gw string) (string, string, string, Cookie, Cookie) {
-	c, s, m := loginToLobby(e, p)
+func Login(e, p, gw string) (string, string, string, Cookie, Cookie, time.Time) {
+	c, s, m, t := loginToLobby(e, p)
 	gc, gs := loginToGameworld(c, s, m, gw)
-	return m, s, gs, c, gc
+	return m, s, gs, c, gc, t
 }
 
 func execRegexp(r, s string, t *string) {
@@ -53,4 +54,13 @@ func getSession(key string, cookies []string) string {
 	s := t[key]
 	v := strings.Split(s, `"`)[3]
 	return v
+}
+
+func getCookieExp(cookies []string) time.Time {
+	s := strings.Split(strings.Split(cookies[0], ";")[1], "=")[1]
+	t, err := time.Parse(time.RFC1123, strings.ReplaceAll(s, "-", " "))
+	if err != nil {
+		log.Fatal(err)
+	}
+	return t
 }
