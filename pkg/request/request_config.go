@@ -7,13 +7,13 @@ import (
 )
 
 type UrlParams map[string]string
-type RequestHeader map[string]string
+type Header map[string]string
 
 type RequestConfig struct {
 	url            string
 	params         UrlParams
 	body           IPayload
-	header         RequestHeader
+	header         Header
 	FollowRedirect bool
 	method         string
 }
@@ -49,8 +49,8 @@ func (rc *RequestConfig) GetUrl() (string, error) {
 	return u.String(), nil
 }
 
-func (rc *RequestConfig) GetHeader() RequestHeader {
-	h := make(RequestHeader)
+func (rc *RequestConfig) GetHeader() Header {
+	h := make(Header)
 	if rc.body != nil {
 		t := rc.body.GetHeader()
 		mergeHeader(&h, &t)
@@ -121,7 +121,7 @@ func (rc *RequestConfig) Set(key string, value any) (ok bool) {
 		if value == nil {
 			rc.header = nil
 		} else {
-			rc.header = value.(RequestHeader)
+			rc.header = value.(Header)
 		}
 	default:
 		ok = false
@@ -133,7 +133,7 @@ func NewRequestConfig() *RequestConfig {
 	return &RequestConfig{}
 }
 
-func setRequestHeader(req *http.Request, headers RequestHeader) {
+func setRequestHeader(req *http.Request, headers Header) {
 	// set header user-agent manually
 	req.Header.Set("User-Agent", userAgent)
 
@@ -146,7 +146,7 @@ func setRequestHeader(req *http.Request, headers RequestHeader) {
 	}
 }
 
-func mergeHeader(d, s *RequestHeader) {
+func mergeHeader(d, s *Header) {
 	for k, v := range *s {
 		(*d)[k] = v
 	}

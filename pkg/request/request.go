@@ -9,7 +9,7 @@ import (
 
 type IPayload interface {
 	GetBody() (io.Reader, error)
-	GetHeader() RequestHeader
+	GetHeader() Header
 }
 
 var client *http.Client = &http.Client{CheckRedirect: checkRedirect}

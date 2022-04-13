@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/didadadida93/lego/pkg/config"
-	"github.com/didadadida93/lego/pkg/login"
 	"github.com/didadadida93/lego/pkg/request"
 )
 
@@ -16,8 +15,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// m, s, gs, c, gc := login.Login(c.Email, c.Password, c.Gameworld)
-	_, _, gs, _, _ := login.Login(c.Email, c.Password, c.Gameworld)
+	gs := c.Authenticate()
 	controller, action := "cache", "get"
 	url := fmt.Sprintf("https://%s.kingdoms.com/api/?c=%s&a=%s&t%v",
 		c.Gameworld, controller, action, time.Now().Unix())
@@ -27,12 +25,14 @@ func main() {
 	rc.Set("body", &request.TKPayload{
 		Action:     action,
 		Controller: controller,
-		Session:    gs,
+		Session:    gs.GameworldSession,
 		Params: request.TKParams{
 			Names: []string{"Collection:Village:own"},
 		},
 	})
-	rc.Set("header", nil)
+	rc.Set("header", request.Header{
+      "Cookie": gs.GetGameCookie(),
+  })
 	rc.Set("method", http.MethodPost)
 	rc.Set("followRedirect", false)
 
@@ -41,13 +41,14 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Println(res.Body)
+
 	// for testing purpose
 	// params := request.UrlParams{
 	// "params1": "values1",
 	// "params2": "values2",
 	// }
 
-	// header := request.RequestHeader{
+	// header := request.Header{
 	// "Cookie": "temp cookie from lego",
 	// }
 
