@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"log"
 	"net/http"
-	"time"
+	// "time"
 
 	"github.com/didadadida93/lego/pkg/config"
 	"github.com/didadadida93/lego/pkg/request"
@@ -16,11 +16,11 @@ func main() {
 		log.Fatal(err)
 	}
 	gs := c.Authenticate()
-	controller, action := "cache", "get"
-	url := fmt.Sprintf("https://%s.kingdoms.com/api/?c=%s&a=%s&t%v",
-		c.Gameworld, controller, action, time.Now().Unix())
+  controller, action := "cache", "get"
+	// url := fmt.Sprintf("https://%s.kingdoms.com/api/?c=%s&a=%s&t%v",
+		// c.Gameworld, controller, action, time.Now().Unix())
 	rc := request.NewRequestConfig()
-	rc.Set("url", url)
+  rc.Set("url", "https://httpbin.org/post")
 	rc.Set("params", nil)
 	rc.Set("body", &request.TKPayload{
 		Action:     action,
@@ -31,8 +31,8 @@ func main() {
 		},
 	})
 	rc.Set("header", request.Header{
-      "Cookie": gs.GetGameCookie(),
-  })
+		"Cookie": gs.GetGameCookie(),
+	})
 	rc.Set("method", http.MethodPost)
 	rc.Set("followRedirect", false)
 
