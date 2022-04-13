@@ -24,24 +24,24 @@ func (gs GameSession) GetGameCookie() string {
 	return fmt.Sprintf("%s%s;", gs.LobbyCookie.String(), gs.GameworldCookie.String())
 }
 
-func Login(e, p, gw string) (GameSession, error) {
+func Login(e, p, gw string) (g GameSession, err error) {
 	c, s, m, t, err := loginToLobby(e, p)
 	if err != nil {
-		return GameSession{}, err
+		return
 	}
 
 	gc, gs, err := loginToGameworld(c, s, m, gw)
 	if err != nil {
-		return GameSession{}, err
+		return
 	}
-	return GameSession{
-		Msid:             m,
-		LobbySession:     s,
-		LobbyCookie:      c,
-		GameworldSession: gs,
-		GameworldCookie:  gc,
-		Expires:          t,
-	}, nil
+
+  g.Msid = m
+  g.LobbySession = s
+  g.LobbyCookie = c
+  g.GameworldSession = gs
+  g.GameworldCookie = gc
+  g.Expires = t
+	return
 }
 
 func execRegexp(r, s string, t *string) {

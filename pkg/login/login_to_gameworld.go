@@ -59,7 +59,7 @@ func loginToGameworld(c request.Cookie, s, m, gw string) (gc request.Cookie, gs 
 	if err != nil {
 		return
 	}
-	getGameworldToken(rc, m, gwId, &token)
+	err = getGameworldToken(rc, m, gwId, &token)
 	if err != nil {
 		return
 	}
