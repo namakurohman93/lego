@@ -9,20 +9,36 @@ import (
 )
 
 type Config struct {
-	Email     string `json:"email"`
-	Password  string `json:"password"`
-	Gameworld string `json:"gameworld"`
+	Email       string            `json:"email"`
+	Password    string            `json:"password"`
+	Gameworld   string            `json:"gameworld"`
+	GameSession tkapi.GameSession `json:"gameSession"`
 }
 
-func (conf Config) Authenticate() tkapi.GameSession {
+func (conf Config) Authenticate() (tkapi.GameSession, error) {
+	if conf.GameSession.Msid != "" &&
+		conf.GameSession.LobbySession != "" &&
+		conf.GameSession.LobbyCookie != nil &&
+		conf.GameSession.GameworldSession != "" &&
+		conf.GameSession.GameworldCookie != nil {
+		return tkapi.GameSession{
+			Msid:             conf.GameSession.Msid,
+			LobbySession:     conf.GameSession.LobbySession,
+			LobbyCookie:      conf.GameSession.LobbyCookie,
+			GameworldSession: conf.GameSession.GameworldSession,
+			GameworldCookie:  conf.GameSession.GameworldCookie,
+		}, nil
+	}
 	m, s, gs, c, gc := login.Login(conf.Email, conf.Password, conf.Gameworld)
-	return tkapi.GameSession{
+	gameSession := tkapi.GameSession{
 		Msid:             m,
 		LobbySession:     s,
 		LobbyCookie:      c,
 		GameworldSession: gs,
 		GameworldCookie:  gc,
 	}
+	err := saveGameSession(&conf, &gameSession)
+	return gameSession, err
 }
 
 func GetConfig() (c Config, err error) {
@@ -35,4 +51,14 @@ func GetConfig() (c Config, err error) {
 		return
 	}
 	return
+}
+
+func saveGameSession(conf *Config, gs *tkapi.GameSession) error {
+	conf.GameSession = *gs
+	b, err := json.MarshalIndent(conf, "", "  ")
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile("config.json", b, 0644) // -rw-r--r--
+	return err
 }

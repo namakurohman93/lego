@@ -15,5 +15,5 @@ type GameSession struct {
 }
 
 func (gs GameSession) GetGameCookie() string {
-	return fmt.Sprintf("%s%s", gs.LobbyCookie.String(), gs.GameworldCookie.String())
+	return fmt.Sprintf("%s%s;", gs.LobbyCookie.String(), gs.GameworldCookie.String())
 }

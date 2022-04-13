@@ -3,11 +3,11 @@ package main
 import (
 	// "fmt"
 	"log"
-	"net/http"
+	// "net/http"
 	// "time"
 
 	"github.com/didadadida93/lego/pkg/config"
-	"github.com/didadadida93/lego/pkg/request"
+	// "github.com/didadadida93/lego/pkg/request"
 )
 
 func main() {
@@ -15,32 +15,38 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	gs := c.Authenticate()
-  controller, action := "cache", "get"
-	// url := fmt.Sprintf("https://%s.kingdoms.com/api/?c=%s&a=%s&t%v",
-		// c.Gameworld, controller, action, time.Now().Unix())
-	rc := request.NewRequestConfig()
-  rc.Set("url", "https://httpbin.org/post")
-	rc.Set("params", nil)
-	rc.Set("body", &request.TKPayload{
-		Action:     action,
-		Controller: controller,
-		Session:    gs.GameworldSession,
-		Params: request.TKParams{
-			Names: []string{"Collection:Village:own"},
-		},
-	})
-	rc.Set("header", request.Header{
-		"Cookie": gs.GetGameCookie(),
-	})
-	rc.Set("method", http.MethodPost)
-	rc.Set("followRedirect", false)
-
-	res, err := request.Do(rc)
+	log.Println(c)
+	gs, err := c.Authenticate()
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(res.Body)
+	log.Println(gs)
+	log.Println(c)
+	// controller, action := "cache", "get"
+	// url := fmt.Sprintf("https://%s.kingdoms.com/api/?c=%s&a=%s&t%v",
+	// c.Gameworld, controller, action, time.Now().Unix())
+	// rc := request.NewRequestConfig()
+	// rc.Set("url", "https://httpbin.org/post")
+	// rc.Set("params", nil)
+	// rc.Set("body", &request.TKPayload{
+	// Action:     action,
+	// Controller: controller,
+	// Session:    gs.GameworldSession,
+	// Params: request.TKParams{
+	// Names: []string{"Collection:Village:own"},
+	// },
+	// })
+	// rc.Set("header", request.Header{
+	// "Cookie": gs.GetGameCookie(),
+	// })
+	// rc.Set("method", http.MethodPost)
+	// rc.Set("followRedirect", false)
+
+	// res, err := request.Do(rc)
+	// if err != nil {
+	// log.Fatal(err)
+	// }
+	// log.Println(res.Body)
 
 	// for testing purpose
 	// params := request.UrlParams{
