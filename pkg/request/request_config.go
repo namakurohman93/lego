@@ -48,13 +48,16 @@ func (rc *RequestConfig) GetUrl() (string, error) {
 
 func (rc *RequestConfig) GetHeader() Header {
 	h := make(Header)
+
 	if rc.body != nil {
 		t := rc.body.GetHeader()
 		mergeHeader(&h, &t)
 	}
+
 	if rc.header != nil {
 		mergeHeader(&h, &rc.header)
 	}
+
 	return h
 }
 

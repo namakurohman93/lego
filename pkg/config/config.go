@@ -6,17 +6,16 @@ import (
 	"time"
 
 	"github.com/didadadida93/lego/pkg/login"
-	"github.com/didadadida93/lego/pkg/tkapi"
 )
 
 type Config struct {
 	Email       string            `json:"email"`
 	Password    string            `json:"password"`
 	Gameworld   string            `json:"gameworld"`
-	GameSession tkapi.GameSession `json:"gameSession"`
+	GameSession login.GameSession `json:"gameSession"`
 }
 
-func (conf Config) Authenticate() (tkapi.GameSession, error) {
+func (conf Config) Authenticate() (login.GameSession, error) {
 	z := time.Time{}
 	if conf.GameSession.Msid != "" &&
 		conf.GameSession.LobbySession != "" &&
@@ -24,7 +23,8 @@ func (conf Config) Authenticate() (tkapi.GameSession, error) {
 		conf.GameSession.GameworldSession != "" &&
 		conf.GameSession.GameworldCookie != nil &&
 		conf.GameSession.Expires != z {
-		return tkapi.GameSession{
+
+		return login.GameSession{
 			Msid:             conf.GameSession.Msid,
 			LobbySession:     conf.GameSession.LobbySession,
 			LobbyCookie:      conf.GameSession.LobbyCookie,
@@ -33,15 +33,8 @@ func (conf Config) Authenticate() (tkapi.GameSession, error) {
 			Expires:          conf.GameSession.Expires,
 		}, nil
 	}
-	m, s, gs, c, gc, t := login.Login(conf.Email, conf.Password, conf.Gameworld)
-	gameSession := tkapi.GameSession{
-		Msid:             m,
-		LobbySession:     s,
-		LobbyCookie:      c,
-		GameworldSession: gs,
-		GameworldCookie:  gc,
-		Expires:          t,
-	}
+
+	gameSession := login.Login(conf.Email, conf.Password, conf.Gameworld)
 	err := saveGameSession(&conf, &gameSession)
 	return gameSession, err
 }
@@ -58,7 +51,7 @@ func GetConfig() (c Config, err error) {
 	return
 }
 
-func saveGameSession(conf *Config, gs *tkapi.GameSession) error {
+func saveGameSession(conf *Config, gs *login.GameSession) error {
 	conf.GameSession = *gs
 	b, err := json.MarshalIndent(conf, "", "  ")
 	if err != nil {

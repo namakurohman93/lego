@@ -10,32 +10,32 @@ import (
 	"github.com/didadadida93/lego/pkg/request"
 )
 
-type TKApiResponse struct {
-	Time     int64   `json:"time,string"`
-	SerialNo int     `json:"serialNo"`
-	Cache    []Cache `json:"cache"`
-	Response any     `json:"response"`
-	Error    any     `json:"error"`
+type tkApiResponse struct {
+	Time     int64         `json:"time,string"`
+	SerialNo int           `json:"serialNo"`
+	Cache    []cacheStruct `json:"cache"`
+	Response any           `json:"response"`
+	Error    any           `json:"error"`
 }
 
 // --- starting from cache, it already different
-type Cache struct {
-	Data CacheData `json:"data"`
+type cacheStruct struct {
+	Data cacheData `json:"data"`
 	Name string    `json:"name"`
 }
 
 // --- or maybe starting from here, idk
-type CacheData struct {
-	Cache     []AvatarCache `json:"cache"`
+type cacheData struct {
+	Cache     []avatarCache `json:"cache"`
 	Operation int           `json:"operation"`
 }
 
-type AvatarCache struct {
-	Data Avatar `json:"data"`
+type avatarCache struct {
+	Data avatarStruct `json:"data"`
 	Name string `json:"name"`
 }
 
-type Avatar struct {
+type avatarStruct struct {
 	AccoutnName           string `json:"accountName"`
 	AvatarIdentifier      string `json:"avatarIdentifier"`
 	AvatarName            string `json:"avatarName"`
@@ -101,7 +101,7 @@ func getGameworldId(rc *request.RequestConfig, s, gw string, gwId *string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	var resp TKApiResponse
+	var resp tkApiResponse
 	err = json.Unmarshal([]byte(res.Body), &resp)
 	if err != nil {
 		log.Fatal(err)

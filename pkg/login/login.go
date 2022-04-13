@@ -1,6 +1,7 @@
 package login
 
 import (
+	"fmt"
 	"log"
 	"net/url"
 	"regexp"
@@ -10,21 +11,42 @@ import (
 	"github.com/didadadida93/lego/pkg/request"
 )
 
-func Login(e, p, gw string) (string, string, string, request.Cookie, request.Cookie, time.Time) {
+type GameSession struct {
+	Msid             string
+	LobbySession     string
+	LobbyCookie      request.Cookie
+	GameworldSession string
+	GameworldCookie  request.Cookie
+	Expires          time.Time
+}
+
+func (gs GameSession) GetGameCookie() string {
+	return fmt.Sprintf("%s%s;", gs.LobbyCookie.String(), gs.GameworldCookie.String())
+}
+
+func Login(e, p, gw string) GameSession {
 	c, s, m, t := loginToLobby(e, p)
 	gc, gs := loginToGameworld(c, s, m, gw)
-	return m, s, gs, c, gc, t
+
+	return GameSession{
+		Msid:             m,
+		LobbySession:     s,
+		LobbyCookie:      c,
+		GameworldSession: gs,
+		GameworldCookie:  gc,
+		Expires:          t,
+	}
 }
 
 func execRegexp(r, s string, t *string) {
 	re := regexp.MustCompile(r)
 	*t = re.FindStringSubmatch(s)[1]
+
 	return
 }
 
 func getCookie(cookies []string) request.Cookie {
 	result := make(request.Cookie)
-
 	for _, cookie := range cookies {
 		c := strings.Split(cookie, ";")[0]
 		t := strings.Split(c, "=")
@@ -45,6 +67,7 @@ func getSession(key string, cookies []string) string {
 	t := getCookie(cookies)
 	s := t[key]
 	v := strings.Split(s, `"`)[3]
+
 	return v
 }
 
@@ -54,5 +77,6 @@ func getCookieExp(cookies []string) time.Time {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	return t
 }

@@ -21,6 +21,7 @@ func loginToLobby(e, p string) (c request.Cookie, s, m string, t time.Time) {
 	rc.Set("header", nil)
 	rc.Set("method", http.MethodGet)
 	rc.Set("followRedirect", false)
+
 	res, err := request.Do(rc)
 	if err != nil {
 		log.Fatal(err)

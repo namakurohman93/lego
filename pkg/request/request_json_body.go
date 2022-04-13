@@ -22,9 +22,7 @@ func (u *User) GetBody() (io.Reader, error) {
 }
 
 func (u *User) GetHeader() Header {
-	return Header{
-		"Content-Type": jsonContentType,
-	}
+	return Header{"Content-Type": jsonContentType}
 }
 
 type TKPayload struct {

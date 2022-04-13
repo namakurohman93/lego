@@ -1,4 +1,3 @@
 package tkapi
 
-type GameConfig struct {
-}
+type GameConfig struct{}
