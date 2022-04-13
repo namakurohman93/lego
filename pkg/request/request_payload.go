@@ -1,29 +1,22 @@
 package request
 
 import (
-	"bytes"
-	"encoding/json"
-	"io"
+    "bytes"
+    "encoding/json"
+    "io"
+    "net/url"
+    "strings"
 )
 
-type User struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
-}
-
+var formContentType string = "application/x-www-form-urlencoded"
 var jsonContentType string = "application/json"
 
-func (u *User) GetBody() (io.Reader, error) {
-	body, err := json.Marshal(u)
-	if err != nil {
-		return nil, err
-	}
-	return bytes.NewBuffer(body), nil
+type IPayload interface {
+	GetBody() (io.Reader, error)
+	GetHeader() Header
 }
 
-func (u *User) GetHeader() Header {
-	return Header{"Content-Type": jsonContentType}
-}
+type FormBody map[string]string
 
 type TKPayload struct {
 	Action     string   `json:"action"`
@@ -34,6 +27,18 @@ type TKPayload struct {
 
 type TKParams struct {
 	Names []string `json:"names"`
+}
+
+func (f *FormBody) GetBody() (io.Reader, error) {
+	d := url.Values{}
+	for k, v := range *f {
+		d.Set(k, v)
+	}
+	return strings.NewReader(d.Encode()), nil
+}
+
+func (f *FormBody) GetHeader() Header {
+	return Header{"Content-Type": formContentType}
 }
 
 func (p *TKPayload) GetBody() (io.Reader, error) {

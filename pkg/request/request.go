@@ -2,16 +2,10 @@ package request
 
 import (
 	"fmt"
-	"io"
 	"net/http"
 
 	"github.com/didadadida93/lego/pkg/response"
 )
-
-type IPayload interface {
-	GetBody() (io.Reader, error)
-	GetHeader() Header
-}
 
 type UrlParams map[string]string
 type Header map[string]string
