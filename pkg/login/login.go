@@ -80,9 +80,5 @@ func getSession(key string, cookies []string) string {
 func getCookieExp(cookies []string) (t time.Time, err error) {
 	s := strings.Split(strings.Split(cookies[0], ";")[1], "=")[1]
 	t, err = time.Parse(time.RFC1123, strings.ReplaceAll(s, "-", " "))
-	if err != nil {
-		return
-	}
-
 	return
 }
