@@ -7,7 +7,7 @@ import (
 	"github.com/didadadida93/lego/pkg/login"
 )
 
-func Authenticate(c *config.Config) (login.GameSession, error) {
+func NewGameSession(c *config.Config) (g login.GameSession, err error) {
 	z := time.Time{}
 	if c.GameSession.Msid != "" &&
 		c.GameSession.LobbySession != "" &&
@@ -24,10 +24,15 @@ func Authenticate(c *config.Config) (login.GameSession, error) {
 			Expires:          c.GameSession.Expires,
 		}, nil
 	}
-	g, err := login.Login(c.Email, c.Password, c.Gameworld)
+	g, err = Authenticate(c)
+	return
+}
+
+func Authenticate(c *config.Config) (g login.GameSession, err error) {
+	g, err = login.Login(c.Email, c.Password, c.Gameworld)
 	if err != nil {
-		return g, err
+		return
 	}
 	err = c.UpdateGameSessionConfig(&g)
-	return g, err
+	return
 }
