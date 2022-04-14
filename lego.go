@@ -1,13 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"net/http"
-	"time"
 
 	"github.com/didadadida93/lego/pkg/config"
-	"github.com/didadadida93/lego/pkg/request"
 	"github.com/didadadida93/lego/pkg/tkapi"
 )
 
@@ -33,28 +29,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// log.Println(gs)
-	controller, action := "cache", "get"
-	url := fmt.Sprintf("https://%s.kingdoms.com/api/?c=%s&a=%s&t%v",
-		c.Gameworld, controller, action, time.Now().Unix())
-	rc := request.NewRequestConfig()
-	rc.Set("url", url)
-	rc.Set("params", nil)
-	rc.Set("body", &request.TKPayload{
-		Action:     action,
-		Controller: controller,
-		Session:    gs.GameworldSession,
-		Params: request.TKParams{
-			Names: []string{"Collection:Village:own"},
-		},
-	})
-	rc.Set("header", request.Header{
-		"Cookie": gs.GetGameCookie(),
-	})
-	rc.Set("method", http.MethodPost)
-	rc.Set("followRedirect", false)
-
-	res, err := request.Do(rc)
+	res, err := tkapi.RequestOwnVillage(c.Gameworld,
+		gs.GameworldSession, gs.GetGameCookie())
 	if err != nil {
 		log.Fatal(err)
 	}
