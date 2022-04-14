@@ -29,23 +29,31 @@ type coordinates struct {
 	Y int `json:"y,string"`
 }
 
-func RequestOwnVillage(gw, gs, cookie string) (vs []village, err error) {
-	controller, action := "cache", "get"
-	url := fmt.Sprintf(gameworldUrl, gw, controller,
-		action, time.Now().Unix())
+func (gd *GameDriver) RequestOwnVillage() (vs []village, err error) {
+	if expired := getExpired(gd); expired {
+		// need to re authenticate
+		// writing session to file again
+		// update current gd session
+		err = gd.ReAuthenticate()
+		if err != nil {
+			return vs, err
+		}
+	}
+	c, a := "cache", "get"
+	url := fmt.Sprintf(gameworldUrl, gd.Config.Gameworld, c, a, time.Now().Unix())
 	rc := request.NewRequestConfig()
 	rc.Set("url", url)
 	rc.Set("params", nil)
 	rc.Set("body", &payload{
-		Action:     action,
-		Controller: controller,
-		Session:    gs,
+		Action:     a,
+		Controller: c,
+		Session:    gd.GameSession.GameworldSession,
 		Params: cacheParams{
 			Names: []string{"Collection:Village:own"},
 		},
 	})
 	rc.Set("header", request.Header{
-		"Cookie": cookie,
+		"Cookie": gd.GameSession.GetGameCookie(),
 	})
 	rc.Set("method", http.MethodPost)
 	rc.Set("followRedirect", false)
