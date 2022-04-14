@@ -22,20 +22,19 @@ func NewDriver(c *config.Config) (*GameDriver, error) {
 		c.GameSession.GameworldSession != "" &&
 		c.GameSession.GameworldCookie != nil &&
 		c.GameSession.Expires != z {
-		gs := login.GameSession{
-			Msid:             c.GameSession.Msid,
-			LobbySession:     c.GameSession.LobbySession,
-			LobbyCookie:      c.GameSession.LobbyCookie,
-			GameworldSession: c.GameSession.GameworldSession,
-			GameworldCookie:  c.GameSession.GameworldCookie,
-			Expires:          c.GameSession.Expires,
-		}
 		return &GameDriver{
-			Config:      c,
-			GameSession: gs,
+			Config: c,
+			GameSession: login.GameSession{
+				Msid:             c.GameSession.Msid,
+				LobbySession:     c.GameSession.LobbySession,
+				LobbyCookie:      c.GameSession.LobbyCookie,
+				GameworldSession: c.GameSession.GameworldSession,
+				GameworldCookie:  c.GameSession.GameworldCookie,
+				Expires:          c.GameSession.Expires,
+			},
 		}, nil
 	}
-	g, err := Authenticate(c)
+	g, err := authenticate(c)
 	return &GameDriver{
 		Config:      c,
 		GameSession: g,

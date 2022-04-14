@@ -5,7 +5,7 @@ import (
 	"github.com/didadadida93/lego/pkg/login"
 )
 
-func Authenticate(c *config.Config) (g login.GameSession, err error) {
+func authenticate(c *config.Config) (g login.GameSession, err error) {
 	g, err = login.Login(c.Email, c.Password, c.Gameworld)
 	if err != nil {
 		return
@@ -15,6 +15,6 @@ func Authenticate(c *config.Config) (g login.GameSession, err error) {
 }
 
 func (gd *GameDriver) ReAuthenticate() error {
-	_, err := Authenticate(gd.Config)
+	_, err := authenticate(gd.Config)
 	return err
 }

@@ -31,9 +31,6 @@ type coordinates struct {
 
 func (gd *GameDriver) RequestOwnVillage() (vs []village, err error) {
 	if expired := getExpired(gd); expired {
-		// need to re authenticate
-		// writing session to file again
-		// update current gd session
 		err = gd.ReAuthenticate()
 		if err != nil {
 			return vs, err
