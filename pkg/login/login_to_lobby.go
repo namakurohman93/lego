@@ -38,7 +38,7 @@ func loginToLobby(e, p string) (c request.Cookie, s, m string, t time.Time, err 
 	// get cookies & session
 	c = getCookie(res.Header.Values("set-cookie"))
 	s = getSession("gl5SessionKey", res.Header.Values("set-cookie"))
-	t = getCookieExp(res.Header.Values("set-cookie"))
+	t, err = getCookieExp(res.Header.Values("set-cookie"))
 	return
 }
 
