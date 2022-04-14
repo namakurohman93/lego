@@ -20,6 +20,9 @@ type village struct {
 	IsMainVillage    bool        `json:"isMainVillage"`
 	IsTown           bool        `json:"isTown"`
 	CulturePoints    float32     `json:"culturePoints"`
+	Production       resources   `json:"production"`
+	Storage          resources   `json:"storage"`
+	StorageCapacity  resources   `json:"storageCapacity"`
 }
 
 type coordinates struct {

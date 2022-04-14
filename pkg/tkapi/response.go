@@ -25,7 +25,7 @@ func processCacheData(d, r any) error {
 	if err != nil {
 		return err
 	}
-	err = json.Unmarshal([]byte(c), r)
+	err = json.Unmarshal(c, r)
 	if err != nil {
 		return err
 	}
