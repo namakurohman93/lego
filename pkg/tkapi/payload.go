@@ -8,7 +8,7 @@ import (
 	"github.com/didadadida93/lego/pkg/request"
 )
 
-var contentType = "application/json"
+var contentType string = "application/json"
 
 type payload struct {
 	Action     string `json:"action"`

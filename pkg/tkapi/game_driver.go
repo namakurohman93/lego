@@ -1,6 +1,7 @@
 package tkapi
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/didadadida93/lego/pkg/config"
@@ -12,6 +13,10 @@ var gameworldUrl string = "https://%s.kingdoms.com/api/?c=%s&a=%s&t%v"
 type GameDriver struct {
 	Config      *config.Config
 	GameSession login.GameSession
+}
+
+func (gd *GameDriver) GetUrl(c, a string) string {
+	return fmt.Sprintf(gameworldUrl, gd.Config.Gameworld, c, a, time.Now().Unix())
 }
 
 func NewDriver(c *config.Config) (*GameDriver, error) {
@@ -41,8 +46,12 @@ func NewDriver(c *config.Config) (*GameDriver, error) {
 	}, err
 }
 
-func getExpired(gd *GameDriver) bool {
+func checkExpired(gd *GameDriver) error {
 	y := gd.GameSession.Expires.AddDate(0, 0, -1)
 	n := time.Now()
-	return y.Before(n)
+	if yes := y.Before(n); yes {
+		err := gd.ReAuthenticate()
+		return err
+	}
+	return nil
 }

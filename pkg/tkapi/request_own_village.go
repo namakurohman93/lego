@@ -2,9 +2,7 @@ package tkapi
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/didadadida93/lego/pkg/request"
 )
@@ -30,14 +28,12 @@ type coordinates struct {
 }
 
 func (gd *GameDriver) RequestOwnVillage() (vs []village, err error) {
-	if expired := getExpired(gd); expired {
-		err = gd.ReAuthenticate()
-		if err != nil {
-			return vs, err
-		}
+	err = checkExpired(gd)
+	if err != nil {
+		return
 	}
 	c, a := "cache", "get"
-	url := fmt.Sprintf(gameworldUrl, gd.Config.Gameworld, c, a, time.Now().Unix())
+	url := gd.GetUrl(c, a)
 	rc := request.NewRequestConfig()
 	rc.Set("url", url)
 	rc.Set("params", nil)
