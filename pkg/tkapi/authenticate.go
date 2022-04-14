@@ -7,7 +7,7 @@ import (
 	"github.com/didadadida93/lego/pkg/login"
 )
 
-func NewGameSession(c *config.Config) (g login.GameSession, err error) {
+func GetGameSession(c *config.Config) (g login.GameSession, err error) {
 	z := time.Time{}
 	if c.GameSession.Msid != "" &&
 		c.GameSession.LobbySession != "" &&

@@ -29,7 +29,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	gs, err := tkapi.NewGameSession(&c)
+	gs, err := tkapi.GetGameSession(&c)
 	if err != nil {
 		log.Fatal(err)
 	}
