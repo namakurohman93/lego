@@ -35,12 +35,12 @@ func Login(e, p, gw string) (g GameSession, err error) {
 		return
 	}
 
-  g.Msid = m
-  g.LobbySession = s
-  g.LobbyCookie = c
-  g.GameworldSession = gs
-  g.GameworldCookie = gc
-  g.Expires = t
+	g.Msid = m
+	g.LobbySession = s
+	g.LobbyCookie = c
+	g.GameworldSession = gs
+	g.GameworldCookie = gc
+	g.Expires = t
 	return
 }
 
