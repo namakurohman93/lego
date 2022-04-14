@@ -9,6 +9,8 @@ import (
 	"github.com/didadadida93/lego/pkg/response"
 )
 
+type villageResponse struct {}
+
 func RequestOwnVillage(gw, gs, cookie string) (*response.Response, error) {
 	controller, action := "cache", "get"
 	url := fmt.Sprintf(gameworldUrl, gw, controller,
@@ -16,11 +18,11 @@ func RequestOwnVillage(gw, gs, cookie string) (*response.Response, error) {
 	rc := request.NewRequestConfig()
 	rc.Set("url", url)
 	rc.Set("params", nil)
-	rc.Set("body", &request.TKPayload{
+	rc.Set("body", &payload{
 		Action:     action,
 		Controller: controller,
 		Session:    gs,
-		Params: request.TKParams{
+		Params: cacheParams{
 			Names: []string{"Collection:Village:own"},
 		},
 	})
