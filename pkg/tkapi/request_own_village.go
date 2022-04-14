@@ -1,17 +1,35 @@
 package tkapi
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/didadadida93/lego/pkg/request"
-	"github.com/didadadida93/lego/pkg/response"
 )
 
-type villageResponse struct {}
+type village struct {
+	VillageId        string      `json:"villageId"`
+	PlayerId         string      `json:"playerId"`
+	Name             string      `json:"name"`
+	TribeId          int         `json:"tribeId,string"`
+	BelongsToKing    string      `json:"belongsToKing"`
+	BelongsToKingdom int         `json:"belongsToKingdom"`
+	Type             int         `json:"type,string"`
+	Population       int         `json:"population,string"`
+	Coordinates      coordinates `json:"coordinates"`
+	IsMainVillage    bool        `json:"isMainVillage"`
+	IsTown           bool        `json:"isTown"`
+	CulturePoints    float32     `json:"culturePoints"`
+}
 
-func RequestOwnVillage(gw, gs, cookie string) (*response.Response, error) {
+type coordinates struct {
+	X int `json:"x,string"`
+	Y int `json:"y,string"`
+}
+
+func RequestOwnVillage(gw, gs, cookie string) (vs []village, err error) {
 	controller, action := "cache", "get"
 	url := fmt.Sprintf(gameworldUrl, gw, controller,
 		action, time.Now().Unix())
@@ -33,5 +51,22 @@ func RequestOwnVillage(gw, gs, cookie string) (*response.Response, error) {
 	rc.Set("followRedirect", false)
 
 	res, err := request.Do(rc)
-	return res, err
+	if err != nil {
+		return
+	}
+	var resp response
+	err = json.Unmarshal([]byte(res.Body), &resp)
+	if err != nil {
+		return
+	}
+
+	for _, cv := range resp.Cache[0].Data.Cache {
+		var v village
+		err = processCacheData(cv["data"], &v)
+		if err != nil {
+			return vs, err
+		}
+		vs = append(vs, v)
+	}
+	return
 }

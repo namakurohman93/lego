@@ -29,10 +29,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	res, err := tkapi.RequestOwnVillage(c.Gameworld,
+	villages, err := tkapi.RequestOwnVillage(c.Gameworld,
 		gs.GameworldSession, gs.GetGameCookie())
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(res.Body)
+	log.Println(villages)
 }
