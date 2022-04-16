@@ -66,7 +66,7 @@ func (gd *GameDriver) RequestOwnVillage() (vs []village, err error) {
 
 	for _, cv := range resp.Cache[0].Data.Cache {
 		var v village
-		err = processCacheData(cv["data"], &v)
+		err = shiftType(cv["data"], &v)
 		if err != nil {
 			return vs, err
 		}

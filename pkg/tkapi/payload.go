@@ -32,3 +32,7 @@ func (p *payload) GetHeader() request.Header {
 type cacheParams struct {
 	Names []string `json:"names"`
 }
+
+type getMapParams struct {
+	RegionIdCollection map[string][]int `json:"regionIdCollection"`
+}

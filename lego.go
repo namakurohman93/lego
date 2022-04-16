@@ -16,9 +16,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	villages, err := driver.RequestOwnVillage()
+	m, err := driver.RequestMap()
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(villages)
+	temp := m.GetRobberHideouts()
+	log.Println(temp)
 }

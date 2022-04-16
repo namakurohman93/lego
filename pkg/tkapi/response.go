@@ -3,11 +3,11 @@ package tkapi
 import "encoding/json"
 
 type response struct {
-	Cache    []cache `json:"cache"`
-	Error    any     `json:"error"`
-	Response []any   `json:"response"`
-	SerialNo int     `json:"serialNo"`
-	Time     int64   `json:"time"`
+	Cache    []cache        `json:"cache"`
+	Error    any            `json:"error"`
+	Response map[string]any `json:"response"`
+	SerialNo int            `json:"serialNo"`
+	Time     int64          `json:"time"`
 }
 
 type cache struct {
@@ -20,7 +20,7 @@ type cacheData struct {
 	Operation int              `json:"operation"`
 }
 
-func processCacheData(d, r any) error {
+func shiftType(d, r any) error {
 	c, err := json.Marshal(d)
 	if err != nil {
 		return err

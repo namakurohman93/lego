@@ -86,42 +86,22 @@ func (rc *RequestConfig) PrepareRequest() (*http.Request, error) {
 
 func (rc *RequestConfig) Set(key string, value any) (ok bool) {
 	ok = true
-	switch key {
-	case "url":
-		if value == nil {
-			rc.url = ""
+	switch v := value.(type) {
+	case UrlParams:
+		rc.params = v
+	case IPayload:
+		rc.body = v
+	case Header:
+		rc.header = v
+	case bool:
+		rc.FollowRedirect = v
+	case string:
+		if key == "url" {
+			rc.url = v
+		} else if key == "method" {
+			rc.method = v
 		} else {
-			rc.url = value.(string)
-		}
-	case "params":
-		if value == nil {
-			rc.params = nil
-		} else {
-			rc.params = value.(UrlParams)
-		}
-	case "body":
-		if value == nil {
-			rc.body = nil
-		} else {
-			rc.body = value.(IPayload)
-		}
-	case "followRedirect":
-		if value == nil {
-			rc.FollowRedirect = false
-		} else {
-			rc.FollowRedirect = value.(bool)
-		}
-	case "method":
-		if value == nil {
-			rc.method = "GET"
-		} else {
-			rc.method = value.(string)
-		}
-	case "header":
-		if value == nil {
-			rc.header = nil
-		} else {
-			rc.header = value.(Header)
+			ok = false
 		}
 	default:
 		ok = false
