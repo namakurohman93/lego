@@ -2,6 +2,7 @@ package tkapi
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/didadadida93/lego/pkg/config"
@@ -54,4 +55,8 @@ func checkExpired(gd *GameDriver) error {
 		return err
 	}
 	return nil
+}
+
+func checkAuthFailed(s string) bool {
+	return strings.Contains(s, "Authentication failed")
 }

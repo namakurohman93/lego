@@ -16,10 +16,16 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	vs, err := driver.RequestOwnVillage()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(vs)
 	m, err := driver.RequestMap()
 	if err != nil {
 		log.Fatal(err)
 	}
-	temp := m.GetRobberHideouts()
+	temp := m.Cells.GetRobberHideouts()
 	log.Println(temp)
+  log.Println(m.Players["3938"])
 }

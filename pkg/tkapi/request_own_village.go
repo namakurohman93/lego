@@ -25,11 +25,6 @@ type village struct {
 	StorageCapacity  resources   `json:"storageCapacity"`
 }
 
-type coordinates struct {
-	X int `json:"x,string"`
-	Y int `json:"y,string"`
-}
-
 func (gd *GameDriver) RequestOwnVillage() (vs []village, err error) {
 	err = checkExpired(gd)
 	if err != nil {
@@ -57,6 +52,13 @@ func (gd *GameDriver) RequestOwnVillage() (vs []village, err error) {
 	res, err := request.Do(rc)
 	if err != nil {
 		return
+	}
+	if failed := checkAuthFailed(res.Body); failed {
+		err := gd.ReAuthenticate()
+		if err != nil {
+			return nil, err
+		}
+		return gd.RequestOwnVillage()
 	}
 	var resp response
 	err = json.Unmarshal([]byte(res.Body), &resp)

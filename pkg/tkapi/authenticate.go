@@ -15,6 +15,10 @@ func authenticate(c *config.Config) (g login.GameSession, err error) {
 }
 
 func (gd *GameDriver) ReAuthenticate() error {
-	_, err := authenticate(gd.Config)
-	return err
+	g, err := authenticate(gd.Config)
+	if err != nil {
+		return err
+	}
+	gd.GameSession = g
+	return nil
 }
