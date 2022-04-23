@@ -11,8 +11,9 @@ import (
 type mapResponse map[string]any
 
 type Map struct {
-	Cells  cells
-	Player players
+	Cells   cells
+	Player  players
+	Kingdom kingdoms
 }
 
 type cell interface {
@@ -67,10 +68,9 @@ func (cs *cells) GetRobberHideouts() *[]robberHideout {
 type region map[coordinateId][]json.RawMessage
 
 type mapData struct {
-	Kingdom any     `json:"kingdom"`
-	Player  players `json:"player"`
-	Region  region  `json:"region"`
-	Report  any     `json:"report"`
+	Kingdom kingdoms `json:"kingdom"`
+	Player  players  `json:"player"`
+	Region  region   `json:"region"`
 }
 
 type cellFiller struct {
@@ -260,5 +260,5 @@ func (gd *GameDriver) RequestMap() (*Map, error) {
 			}
 		}
 	}
-	return &Map{cs, md.Player}, nil
+	return &Map{cs, md.Player, md.Kingdom}, nil
 }

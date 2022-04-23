@@ -27,10 +27,16 @@ func main() {
 	}
 	// temp := m.Cells.GetRobberHideouts()
 	// log.Println(temp)
-	if player, ok := m.Player.GetByName("mightbenotfound"); !ok {
-		log.Println("player not found")
+	// if player, ok := m.Player.GetByName("mightbenotfound"); !ok {
+	// log.Println("player not found")
+	// } else {
+	// log.Println("player found")
+	// log.Println(player)
+	// }
+	if kingdom, ok := m.Kingdom.GetByName("mightbenotfound"); !ok {
+		log.Println("kingdom not found")
 	} else {
-		log.Println("player found")
-		log.Println(player)
+		log.Println("kingdom found")
+		log.Println(kingdom)
 	}
 }
