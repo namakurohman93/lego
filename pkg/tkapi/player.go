@@ -1,5 +1,7 @@
 package tkapi
 
+import "strings"
+
 type playerId string
 
 type player struct {
@@ -15,3 +17,14 @@ type player struct {
 }
 
 type players map[playerId]player
+
+func (ps players) GetByName(name string) (r player, ok bool) {
+	for _, p := range ps {
+		if strings.ToLower(p.Name) == strings.ToLower(name) {
+			ok = true
+			r = p
+			return
+		}
+	}
+	return
+}

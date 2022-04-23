@@ -11,8 +11,8 @@ import (
 type mapResponse map[string]any
 
 type Map struct {
-	Cells   cells
-	Players players
+	Cells  cells
+	Player players
 }
 
 type cell interface {

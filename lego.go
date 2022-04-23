@@ -16,16 +16,21 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	vs, err := driver.RequestOwnVillage()
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Println(vs)
+	// vs, err := driver.RequestOwnVillage()
+	// if err != nil {
+	// log.Fatal(err)
+	// }
+	// log.Println(vs)
 	m, err := driver.RequestMap()
 	if err != nil {
 		log.Fatal(err)
 	}
-	temp := m.Cells.GetRobberHideouts()
-	log.Println(temp)
-  log.Println(m.Players["3938"])
+	// temp := m.Cells.GetRobberHideouts()
+	// log.Println(temp)
+	if player, ok := m.Player.GetByName("mightbenotfound"); !ok {
+		log.Println("player not found")
+	} else {
+		log.Println("player found")
+		log.Println(player)
+	}
 }
